@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Менеджер заявок</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 300px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 24px;
+            margin-top: 0;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button[type="submit"] {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Менеджер заявок</h1>
+    <form th:action="@{/login/log}" method="post" th:object="${userLogin}" onsubmit="return validateForm()">
+        <div>
+            <label for="username">Логин:</label>
+            <div th:if="${notFound}" class="alert" role="alert" style="font-size: 16px;">
+                <span style="color: red;">Логин <span
+                        th:text="${notFoundedUsername}"></span> или пароль не подошли</span>
+            </div>
+            <input type="text" id="username" name="username" th:field="*{username}" required>
+        </div>
+        <div>
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" th:field="*{password}" required>
+        </div>
+        <button type="submit">Войти</button>
+    </form>
+    <form th:action="@{/registration}" method="get">
+        <button type="submit">Зарегистрироваться</button>
+    </form>
+</div>
+<script>
+    function validateForm() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        let rc = true;
+
+        // Проверка на пустые строки или наличие пробелов
+        if (username.includes(" ") || password.includes(" ")) {
+            alert("Строки не могут содержать пробелы");
+            rc = false;
+        }
+
+        // Проверка на использование только английских букв
+        const regex1 = /^[A-Za-z0-9]+$/;
+        if (!(regex1.test(username) && regex1.test(password))) {
+            alert("Логин и пароль могут содержать только английские символы и цифры");
+            rc = false;
+        }
+
+        return rc;
+    }
+</script>
+</body>
+</html>

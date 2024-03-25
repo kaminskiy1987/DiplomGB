@@ -1,0 +1,14 @@
+token:
+  signing:
+    key: 48A71E5F1C4E0A2D3B5F2D784E4A1B423D6F247D1R6E5C3A596D635A75527111
+  expirationTime: 2592000000
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://db:5432/kaminskiy1987-db
+    username: root
+    password: password
+  jpa:
+    show-sql: true
+    open-in-view: true

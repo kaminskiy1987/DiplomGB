@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Регистрация</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            width: 300px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            text-transform: uppercase;
+            font-size: 24px;
+            margin-top: 0;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="password"],
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button[type="submit"] {
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Регистрация</h1>
+    <form th:action="@{/registration/reg}" method="post" th:object="${userRegister}" onsubmit="return validateForm()">
+        <div>
+            <label for="username">Логин:</label>
+            <div th:if="${usernameExists}" class="alert" role="alert" style="font-size: 16px;">
+                <span style="color: red;">Логин <span th:text="${existingUsername}"></span> уже занят</span>
+            </div>
+            <input type="text" id="username" name="username" th:field="*{username}" required>
+        </div>
+        <div>
+            <label for="password">Пароль:</label>
+            <input type="password" id="password" name="password" th:field="*{password}" required>
+        </div>
+        <div>
+            <label for="confirmPassword">Подтверждение пароля:</label>
+            <input type="password" id="confirmPassword" name="confirmPassword" required>
+        </div>
+        <div>
+            <label for="firstName">Имя:</label>
+            <input type="text" id="firstName" name="firstName" th:field="*{firstName}" required>
+        </div>
+        <div>
+            <label for="lastName">Фамилия:</label>
+            <input type="text" id="lastName" name="lastName" th:field="*{lastName}" required>
+        </div>
+        <button type="submit">Зарегистрироваться</button>
+    </form>
+</div>
+<script>
+    function validateForm() {
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+        const firstName = document.getElementById("firstName").value;
+        const lastName = document.getElementById("lastName").value;
+        let rc = true;
+
+        // Проверка на длину логина и пароля
+        if (password.length > 30 || password.length < 6
+            || username.length > 30 || username.length < 6
+            || confirmPassword.length > 30 || confirmPassword.length < 6) {
+            alert("Длина логина и пароля должна быть от 6 до 30 символов");
+            rc = false;
+        }
+
+        if (firstName.length > 30 || username.length < 2
+            || lastName.length > 30 || lastName.length < 2) {
+            alert("Имя и фамилия должны быть от 2 до 30 символов");
+            rc = false;
+        }
+
+        // Проверка на пустые строки или наличие пробелов
+        if (username.includes(" ") || password.includes(" ") || confirmPassword.includes(" ")
+            || firstName.includes(" ") || lastName.includes(" ")) {
+            alert("Строки не могут содержать пробелы");
+            rc = false;
+        }
+
+        // Проверка на использование только английских букв
+        const regex1 = /^[A-Za-z0-9]+$/;
+        if (!(regex1.test(username) && regex1.test(password) && regex1.test(confirmPassword))) {
+            alert("Логин и пароль могут содержать только английские символы и цифры");
+            rc = false;
+        }
+
+        // Проверка на использование только русских букв
+        const regex2 = /^[А-Яа-я]+$/;
+        if (!(regex2.test(firstName) && regex2.test(lastName))) {
+            alert("Имя и фамилия могут содержать только русские буквы");
+            rc = false;
+        }
+
+        // Проверка на совпадение паролей
+        if (password !== confirmPassword) {
+            alert("Введенные пароли не совпадают");
+            rc = false;
+        }
+
+        return rc;
+    }
+</script>
+</body>
+</html>
